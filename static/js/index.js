@@ -3,7 +3,8 @@ var API_KEY = "";
 var SEARCH_API_BASE_URL = 
 	"https://www.googleapis.com/youtube/v3/search?part=snippet&q=<q>&key=<key>";
 var player;
-var playing = true;
+var isPlaying = true;
+var currentId = "";
 
 
 // Sets the Youtube list api key, necessary to send search requests
@@ -31,14 +32,14 @@ function onYouTubeIframeAPIReady() {
 // Toggles player between playing and paused
 function changeState() {
 	button = document.getElementById('playerControl');
-	if (playing) {
+	if (isPlaying) {
 		player.pauseVideo();
 		button.innerHTML = 'Play';
 	} else {
 		player.playVideo();
 		button.innerHTML = 'Pause';
 	}
-	playing = !playing;
+	isPlaying = !isPlaying;
 }
 
 // Sends search query over Youtube's API. Load's first result
@@ -54,11 +55,42 @@ function search() {
 	);
 	req.send(null);
 	var items = JSON.parse(req.responseText)['items'];
-	loadVideo(items[0].id.videoId);
+	// loadVideo(items[0].id.videoId);
+	addSong(items[0]);
 }
 
 // Load's the specified video (by id)
 function loadVideo(id) {
+	if (currentId)
+		document.getElementById(currentId + "_indicator").style.display = "none";
+
 	var url = YOUTUBE_BASE_URL.replace('<id>', id);
 	player.loadVideoById(id);
+	currentId = id;
+	document.getElementById(currentId + "_indicator").style.display = "";
+}
+
+function addSong(video) {
+	id = video.id.videoId;
+
+	var tr = document.createElement("tr");
+	var td_songName = document.createElement("td");
+	var td_indicator = document.createElement("td");
+	var a_songName = document.createElement("a");
+	var p_indicator = document.createElement("p");
+
+	p_indicator.innerHTML = ">\t";
+	p_indicator.style.display = "none"
+	p_indicator.id = id + "_indicator";
+	p_indicator.className = "indicator";
+	td_indicator.appendChild(p_indicator);
+
+	a_songName.innerHTML = video.snippet.title;
+	a_songName.href = "javascript:;";
+	a_songName.setAttribute("onClick", "loadVideo('" + id + "');");
+	td_songName.appendChild(a_songName);
+
+	tr.appendChild(td_indicator);
+	tr.appendChild(td_songName);
+	document.getElementById('playlist-table').appendChild(tr);
 }
