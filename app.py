@@ -12,10 +12,6 @@ API_KEY = open('api_key').readline()
 def index_route():
 	return render_template('index.html', api_key=API_KEY)
 
-# Register the controllers
-# app.register_blueprint(index.index)
-# app.register_blueprint(api.userapi)
-
 # Listen on external IPs
 # For us, listen to port 3000 so you can just run 'python app.py' to start the server
 if __name__ == '__main__':
