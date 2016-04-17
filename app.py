@@ -1,7 +1,4 @@
 from flask import Flask, render_template, session
-# import index
-# import controllers
-# import api
 
 # Initialize Flask app with the template folder address
 app = Flask(__name__)

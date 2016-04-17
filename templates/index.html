@@ -27,6 +27,11 @@
 </div>
 <div id="player" style="display:none"></div>
 
+<div id="settings">
+	<h4>Settings</h4>
+	<input type="checkbox" id="show_player_checkbox" onClick="togglePlayerVisibility();" name="Show Player">
+</div>
+
 <script>
 	setApiKey('{{api_key}}');
 	loadYoutubeIFrame();
